@@ -13,8 +13,9 @@ export const profile = {
   phone: "+216 92 558 515",
   github: "https://github.com/benyounes-sadokaziz",
   linkedin: "https://www.linkedin.com/in/sadokaziz-benyounes/",
-  // One CV for now; drop a translated file in /public and key it by locale.
-  cv: { en: "/cv.pdf", fr: "/cv.pdf" },
+  // Filename is what the visitor sees when they save it. One CV for now;
+  // drop a translated file in /public and key it by locale.
+  cv: { en: "/SadokAziz_Benyounes.pdf", fr: "/SadokAziz_Benyounes.pdf" },
 } as const;
 
 export type ProjectId = "sign-bridge" | "traffic-monitoring";
