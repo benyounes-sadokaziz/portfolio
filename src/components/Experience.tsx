@@ -8,7 +8,9 @@ import { experience, type Dictionary } from "@/content";
 import { Container, SectionHeading } from "./ui/Backdrop";
 import { Reveal } from "./ui/Reveal";
 
-export function Experience({ t }: { t: Dictionary }) {
+type Demo = { src: string; poster?: string };
+
+export function Experience({ t, demos = {} }: { t: Dictionary; demos?: Record<string, Demo> }) {
   // The most recent role is open by default: it is the one that matters most.
   const [openId, setOpenId] = useState<string | null>(experience[0]?.id ?? null);
 
@@ -90,6 +92,17 @@ export function Experience({ t }: { t: Dictionary }) {
                               </li>
                             ))}
                           </ul>
+
+                          {demos[role.id] ? (
+                            <video
+                              controls
+                              preload="metadata"
+                              poster={demos[role.id].poster}
+                              className="mt-7 aspect-video w-full max-w-2xl rounded-xl border border-line bg-black"
+                            >
+                              <source src={demos[role.id].src} type="video/mp4" />
+                            </video>
+                          ) : null}
 
                           {role.benchmark ? (
                             <div className="mt-7 max-w-2xl">

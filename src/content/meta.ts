@@ -113,6 +113,8 @@ export interface ExperienceMeta {
   id: string;
   org: string;
   period: string;
+  /** Basename of a video in /public/media, without extension. */
+  demoSlug?: string;
   benchmark?: BenchmarkRow[];
   /** Empty until confirmed - never guessed. */
   location: string;
@@ -125,6 +127,7 @@ export const experience: ExperienceMeta[] = [
     org: "Ora Studio",
     period: "Apr 2026 — Aug 2026",
     location: "",
+    demoSlug: "voice-vibe",
     benchmark: [
       { system: "OpenAI Realtime / GPT-4o voice", architecture: "native speech-to-speech", latency: "< 400 ms" },
       { system: "Retell AI", architecture: "cascade", latency: "≈ 600 ms" },

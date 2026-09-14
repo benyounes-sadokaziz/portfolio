@@ -7,14 +7,20 @@ import { Nav } from "@/components/Nav";
 import { Philosophy } from "@/components/Philosophy";
 import { Projects } from "@/components/Projects";
 import { Skills } from "@/components/Skills";
-import { getPortrait } from "@/lib/media";
-import { getDictionary, profile, type Locale } from "@/content";
+import { getDemo, getPortrait } from "@/lib/media";
+import { experience, getDictionary, profile, type Locale } from "@/content";
 
 export default async function Page({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = getDictionary(locale);
   const typed = locale as Locale;
   const portrait = getPortrait();
+  const roleDemos = Object.fromEntries(
+    experience.flatMap((role) => {
+      const demo = role.demoSlug ? getDemo(role.demoSlug) : null;
+      return demo ? [[role.id, demo] as const] : [];
+    }),
+  );
 
   // Structured data helps a recruiter's search land on the right person.
   const personSchema = {
@@ -37,7 +43,7 @@ export default async function Page({ params }: { params: Promise<{ locale: strin
         <Hero t={t} portrait={portrait} />
         <div className="rule mx-auto max-w-[74rem]" />
         <About t={t} />
-        <Experience t={t} />
+        <Experience t={t} demos={roleDemos} />
         <Projects t={t} locale={typed} />
         <Philosophy t={t} />
         <Skills t={t} />
