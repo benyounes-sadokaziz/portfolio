@@ -1,26 +1,203 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Dark is the designed experience; light is a faithful inversion rather than a
+ * second design. One accent only - a cool electric violet-blue. Cyan appears
+ * exclusively inside architecture diagrams, where a second data colour carries
+ * meaning instead of decoration.
+ */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #fafafb;
+  --bg-elev: #ffffff;
+  --surface: rgba(9, 10, 14, 0.024);
+  --surface-hover: rgba(9, 10, 14, 0.045);
+  --line: rgba(9, 10, 14, 0.1);
+  --line-strong: rgba(9, 10, 14, 0.18);
+  --fg: #0a0b10;
+  --fg-muted: #52586a;
+  --fg-faint: #878da0;
+  --accent: #5442d8;
+  --accent-hi: #6b57f0;
+  --accent-wash: rgba(84, 66, 216, 0.09);
+  --data: #0e7c8c;
+  --grid: rgba(9, 10, 14, 0.055);
+  --glow: rgba(84, 66, 216, 0.16);
+  --noise-opacity: 0.5;
+}
+
+.dark {
+  --bg: #08090c;
+  --bg-elev: #0c0e13;
+  --surface: rgba(255, 255, 255, 0.022);
+  --surface-hover: rgba(255, 255, 255, 0.045);
+  --line: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(255, 255, 255, 0.16);
+  --fg: #edeef3;
+  --fg-muted: #9aa0b0;
+  --fg-faint: #676d7e;
+  --accent: #7b6cff;
+  --accent-hi: #9a8dff;
+  --accent-wash: rgba(123, 108, 255, 0.12);
+  --data: #4fd1e0;
+  --grid: rgba(255, 255, 255, 0.034);
+  --glow: rgba(123, 108, 255, 0.16);
+  --noise-opacity: 0.85;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-bg: var(--bg);
+  --color-elev: var(--bg-elev);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-fg: var(--fg);
+  --color-muted: var(--fg-muted);
+  --color-faint: var(--fg-faint);
+  --color-accent: var(--accent);
+  --color-accent-hi: var(--accent-hi);
+  --color-accent-wash: var(--accent-wash);
+  --color-data: var(--data);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 6rem;
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-geist-sans), system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: var(--accent);
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+    border-radius: 3px;
+  }
+
+  h1, h2, h3, h4 {
+    letter-spacing: -0.028em;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  /* Editorial display sizing. Tight leading is what makes large type read as
+     designed rather than merely big. */
+  .text-display {
+    font-size: clamp(2.6rem, 7.4vw, 5.25rem);
+    line-height: 0.94;
+    letter-spacing: -0.042em;
+    font-weight: 500;
+  }
+
+  .text-h2 {
+    font-size: clamp(1.75rem, 3.4vw, 2.6rem);
+    line-height: 1.08;
+    letter-spacing: -0.032em;
+    font-weight: 500;
+  }
+
+  .text-h3 {
+    font-size: clamp(1.2rem, 2vw, 1.5rem);
+    line-height: 1.2;
+    letter-spacing: -0.022em;
+    font-weight: 500;
+  }
+
+  .eyebrow {
+    font-family: var(--font-geist-mono), ui-monospace, monospace;
+    font-size: 0.6875rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--fg-faint);
+  }
+
+  /* Thin technical rule that fades at both ends. */
+  .rule {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--line-strong) 12%, var(--line-strong) 88%, transparent);
+  }
+
+  .glass {
+    background-color: color-mix(in oklab, var(--bg) 72%, transparent);
+    backdrop-filter: blur(14px) saturate(140%);
+  }
+
+  .surface-card {
+    background: linear-gradient(180deg, var(--surface), transparent 60%);
+    border: 1px solid var(--line);
+  }
 }
+
+/* --- Background depth -------------------------------------------------- */
+
+.bg-grid {
+  background-image:
+    linear-gradient(to right, var(--grid) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+  background-size: 72px 72px;
+  /* Grid is structure, not wallpaper: it fades out before it can compete. */
+  mask-image: radial-gradient(ellipse 110% 70% at 50% 0%, #000 20%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse 110% 70% at 50% 0%, #000 20%, transparent 78%);
+}
+
+.bg-glow {
+  background: radial-gradient(ellipse 60% 46% at 50% -8%, var(--glow), transparent 70%);
+}
+
+.bg-noise {
+  opacity: var(--noise-opacity);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.032'/%3E%3C/svg%3E");
+}
+
+/* --- Motion ------------------------------------------------------------ */
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.45; transform: scale(0.86); }
+}
+
+@keyframes dash-flow {
+  to { stroke-dashoffset: -18; }
+}
+
+.dash-flow {
+  stroke-dasharray: 2 7;
+  animation: dash-flow 1.4s linear infinite;
+}
+
+.pulse-dot {
+  animation: pulse-dot 2.4s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
